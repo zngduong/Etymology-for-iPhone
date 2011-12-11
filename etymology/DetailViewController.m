@@ -7,13 +7,15 @@
 //
 
 #import "DetailViewController.h"
-
 #import "RootViewController.h"
 
 @interface DetailViewController ()
 @property (nonatomic, retain) UIPopoverController *popoverController;
 - (void)configureView;
 @end
+
+UITextView *desc;
+UILabel *term;
 
 @implementation DetailViewController
 
@@ -34,6 +36,13 @@
  */
 - (void)setDetailItem:(NSManagedObject *)managedObject
 {
+    /*NSLog(@"Should edit %@", desc);
+    [desc setText:@"blah"];
+    NSLog(@"Setting");
+
+    [self.detailDescriptionLabel setText:@"Meaning"];
+    self.detailDescriptionLabel.text = @"Meaning";
+    NSLog(@"Meaning: %@", self.detailDescriptionLabel.text);*/
 	if (_detailItem != managedObject) {
 		[_detailItem release];
 		_detailItem = [managedObject retain];
@@ -44,7 +53,7 @@
     
     if (self.popoverController != nil) {
         [self.popoverController dismissPopoverAnimated:YES];
-    }		
+    }	        
 }
 
 - (void)configureView
@@ -52,12 +61,21 @@
     // Update the user interface for the detail item.
 
     // Normally should use accessor method, but using KVC here avoids adding a custom class to the template.
-    self.detailDescriptionLabel.text = [[self.detailItem valueForKey:@"timeStamp"] description];
+    desc.text = [[[self.detailItem valueForKey:@"meaning"] description] stringByReplacingOccurrencesOfString:@"\\\"" withString:@"\""];
+    term.text = [[self.detailItem valueForKey:@"term"] description];
+    //[detailLbl setText:[[self.detailItem valueForKey:@"meaning"] description]];
+     NSLog(@"%@", [[self.detailItem valueForKey:@"meaning"] description]);
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    NSLog(@"Should edit %@", detailLbl);
+    
+    desc = detailLbl;
+    term = termLbl;
+    
+//     self.navigationController.navigationBar.barStyle = UIBarStyleBlack;   
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -101,13 +119,20 @@
     self.popoverController = nil;
 }
 
-/*
+
  // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad
-{
+{        
+    UIImageView* imageView = [[[UIImageView alloc] initWithFrame:self.toolbar.frame] autorelease];
+    imageView.contentMode = UIViewContentModeLeft;
+    imageView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"textured-toolbar.png"]];
+    [self.toolbar insertSubview:imageView atIndex:0];
+    
+    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"noise.gif"]];
+    
     [super viewDidLoad];
 }
- */
+ 
 
 - (void)viewDidUnload
 {

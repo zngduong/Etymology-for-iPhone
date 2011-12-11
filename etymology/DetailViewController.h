@@ -12,8 +12,9 @@
 
 @class RootViewController;
 
-@interface DetailViewController : UIViewController <UIPopoverControllerDelegate, UISplitViewControllerDelegate> {
-
+@interface DetailViewController : UIViewController <UIPopoverControllerDelegate, UISplitViewControllerDelegate> { 
+    IBOutlet UITextView *detailLbl;
+    IBOutlet UILabel *termLbl;
 }
 
 

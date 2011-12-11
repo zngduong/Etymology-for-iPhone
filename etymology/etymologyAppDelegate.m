@@ -8,7 +8,7 @@
 
 #import "etymologyAppDelegate.h"
 
-#import "RootViewController.h"
+#import "GenericViewController.h"
 
 #import "DetailViewController.h"
 
@@ -31,7 +31,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    // Override point for customization after application launch.
+    // Override point for customization after application launch.        
     // Add the split view controller's view to the window and display.
     self.window.rootViewController = self.splitViewController;
     [self.window makeKeyAndVisible];
@@ -158,7 +158,25 @@
         return __persistentStoreCoordinator;
     }
     
-    NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"etymology.sqlite"];
+//    NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"dumpfile.db"];
+    //NSString *storePath = [[NSString stringWithFormat:@"%@",[self applicationDocumentsDirectory]] stringByAppendingPathComponent: @"dumpfile.db"];
+    
+    NSString *storePath = [[NSBundle mainBundle] 
+                                  pathForResource:@"dumpfile" ofType:@"db"];
+    NSURL *storeURL = [NSURL fileURLWithPath:storePath];
+    /*NSString *storePath = @"file://localhost/Users/mattneary/Library/Application%20Support/iPhone%20Simulator/5.0/Applications/102A9701-7B0A-4D3A-B953-01B399B855EF/Documents/dumpfile.db";
+    NSURL *storeURL = [NSURL URLWithString:storePath];*/
+    
+    // Put down default db if it doesn't already exist
+   
+    /*NSFileManager *fileManager = [NSFileManager defaultManager];
+    if (![fileManager fileExistsAtPath:storePath]) {
+        NSString *defaultStorePath = [[NSBundle mainBundle] 
+                                      pathForResource:@"dumpfile" ofType:@"db"];
+        if (defaultStorePath) {
+            [fileManager copyItemAtPath:defaultStorePath toPath:storePath error:NULL];
+        }
+    }*/
     
     NSError *error = nil;
     __persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
@@ -188,6 +206,7 @@
          
          */
         NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+        
         abort();
     }    
     

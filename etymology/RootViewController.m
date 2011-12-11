@@ -7,7 +7,7 @@
 //
 
 #import "RootViewController.h"
-
+#import "etymologyAppDelegate.h"
 #import "DetailViewController.h"
 
 @interface RootViewController ()
@@ -150,16 +150,16 @@
 
 - (void)dealloc
 {
-    [detailViewController release];
+    /*[detailViewController release];
     [fetchedResultsController release];
-    [managedObjectContext release];
+    [managedObjectContext release];*/
     [super dealloc];
 }
 
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
     NSManagedObject *managedObject = [fetchedResultsController objectAtIndexPath:indexPath];
-    cell.textLabel.text = [[managedObject valueForKey:@"timeStamp"] description];
+    cell.textLabel.text = [[managedObject valueForKey:@"term"] description];
 }
 
 - (void)insertNewObject:(id)sender
@@ -175,7 +175,7 @@
     NSManagedObject *newManagedObject = [NSEntityDescription insertNewObjectForEntityForName:[entity name] inManagedObjectContext:context];
     
     // If appropriate, configure the new managed object.
-    [newManagedObject setValue:[NSDate date] forKey:@"timeStamp"];
+    [newManagedObject setValue:[NSDate date] forKey:@"term"];
     
     // Save the context.
     NSError *error = nil;
@@ -200,29 +200,33 @@
 {
     if (fetchedResultsController != nil) {
         return fetchedResultsController;
-    }
-    
+    }   
     /*
      Set up the fetched results controller.
     */
     // Create the fetch request for the entity.
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     // Edit the entity name as appropriate.
-    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Event" inManagedObjectContext:managedObjectContext];
+    NSManagedObjectContext *moc = [[etymologyAppDelegate alloc] managedObjectContext];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Words" inManagedObjectContext:moc];
     [fetchRequest setEntity:entity];
     
+    //Set the predicate
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"term LIKE %@ AND meaning LIKE %@", @"*pr*", @"*"];
+    [fetchRequest setPredicate:predicate];
+    NSLog(@"Filtering");
     // Set the batch size to a suitable number.
     [fetchRequest setFetchBatchSize:20];
     
     // Edit the sort key as appropriate.
-    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"timeStamp" ascending:NO];
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"term" ascending:YES];
     NSArray *sortDescriptors = [[NSArray alloc] initWithObjects:sortDescriptor, nil];
     
     [fetchRequest setSortDescriptors:sortDescriptors];
     
     // Edit the section name key path and cache name if appropriate.
     // nil for section name key path means "no sections".
-    NSFetchedResultsController *aFetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:managedObjectContext sectionNameKeyPath:nil cacheName:@"Root"];
+    NSFetchedResultsController *aFetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:moc sectionNameKeyPath:nil cacheName:@"Root"];
     aFetchedResultsController.delegate = self;
     self.fetchedResultsController = aFetchedResultsController;
     
@@ -230,7 +234,7 @@
     [fetchRequest release];
     [sortDescriptor release];
     [sortDescriptors release];
-    
+        
     return fetchedResultsController;
 }    
 
@@ -284,17 +288,17 @@
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
 {
-    [self.tableView endUpdates];
+    [self.tableView endUpdates];    
 }
 
-/*
+
 // Implementing the above methods to update the table view in response to individual changes may have performance implications if a large number of changes are made simultaneously. If this proves to be an issue, you can instead just implement controllerDidChangeContent: which notifies the delegate that all section and object changes have been processed. 
  
- - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
+/* - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
 {
     // In the simplest, most efficient, case, reload the table view.
     [self.tableView reloadData];
-}
- */
+}*/
+ 
 
 @end

@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@class RootViewController;
+@class GenericViewController;
 
 @class DetailViewController;
 
@@ -27,7 +27,7 @@
 
 @property (nonatomic, retain) IBOutlet UISplitViewController *splitViewController;
 
-@property (nonatomic, retain) IBOutlet RootViewController *rootViewController;
+@property (nonatomic, retain) IBOutlet GenericViewController *rootViewController;
 
 @property (nonatomic, retain) IBOutlet DetailViewController *detailViewController;
 

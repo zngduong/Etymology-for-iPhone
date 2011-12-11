@@ -8,9 +8,17 @@
 
 #import <UIKit/UIKit.h>
 
+@class DetailViewController;
+
+#import <CoreData/CoreData.h>
 
 @interface GenericViewController : UIViewController <UISearchDisplayDelegate, UITableViewDataSource, UITableViewDelegate> {
         NSMutableArray* _data;
 }
+
+@property (nonatomic, retain) IBOutlet DetailViewController *detailViewController;
+
+@property (nonatomic, retain) NSFetchedResultsController *fetchedResultsController;
+@property (nonatomic, retain) NSManagedObjectContext *managedObjectContext;
 
 @end

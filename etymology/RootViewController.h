@@ -12,7 +12,7 @@
 
 #import <CoreData/CoreData.h>
 
-@interface RootViewController : UITableViewController <NSFetchedResultsControllerDelegate> {
+@interface RootViewController : UITableViewController <UITableViewDataSource, NSFetchedResultsControllerDelegate> {
 
 }
 
